@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Contraseñas</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif; 
+            background: linear-gradient(135deg, #007899, #0066cc);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #fff;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-align: center;
+            width: 300px;
+        }
+
+        .logo img {
+            max-width: 200px;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+            font-weight: 600;
+            color: #fff;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        input[type="number"], input[type="checkbox"] {
+            margin-bottom: 20px;
+        }
+
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #0073e6; 
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #8aa5c1; 
+        }
+
+        button:disabled {
+            background-color: #c0c0c0; 
+            cursor: not-allowed;
+        }
+
+        .result {
+            font-weight: 600;
+            margin-top: 20px;
+            color: #e0e0e0; 
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <img src="img/logo.png" alt="Logo" />
+        </div>
+        <h1>Generador de Contraseñas</h1>
+        <form id="passwordForm">
+            <label for="length">Longitud de la contraseña:</label>
+            <input type="number" id="length" name="length" value="10" min="8" required>
+
+            <label for="ucfirst">
+                <input type="checkbox" id="ucfirst" name="ucfirst" checked>
+                ¿Comenzar con mayúscula?
+            </label>
+
+            <label for="spchar">
+                <input type="checkbox" id="spchar" name="spchar" checked>
+                ¿Incluir carácter especial?
+            </label>
+
+            <button type="submit">Generar Contraseña</button>
+            <button type="button" id="clearButton" disabled>Limpiar</button>
+        </form>
+        <div class="result" id="result"></div>
+    </div>
+
+    <script>
+        function randomPassword(len = 10, ucfirst = true, spchar = true) {
+            if (len >= 8 && (len % 2) !== 0) { 
+                len = 8;
+            }
+            const length = len - 2; 
+            const conso = ['b', 'c', 'd', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'p', 'r', 's', 't', 'v', 'w', 'x', 'y', 'z'];
+            const vowel = ['a', 'e', 'i', 'o', 'u'];
+            const spchars = ['!', '@', '#', '$', '%', '^', '&', '*', '-', '+', '?', '=', '~'];
+            let password = '';
+            const max = length / 2;
+            for (let i = 1; i <= max; i++) {
+                password += conso[Math.floor(Math.random() * conso.length)];
+                password += vowel[Math.floor(Math.random() * vowel.length)];
+            }
+            if (spchar) {
+                password = password.slice(0, -1) + spchars[Math.floor(Math.random() * spchars.length)];
+            }
+            password += Math.floor(Math.random() * 90 + 10);
+            if (ucfirst) {
+                password = password.charAt(0).toUpperCase() + password.slice(1);
+            }
+            return password;
+        }
+
+    
+        document.getElementById('passwordForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const length = document.getElementById('length').value;
+            const ucfirst = document.getElementById('ucfirst').checked;
+            const spchar = document.getElementById('spchar').checked;
+
+            const password = randomPassword(parseInt(length), ucfirst, spchar);
+            const resultElement = document.getElementById('result');
+            resultElement.textContent = 'Contraseña Generada: ' + password;
+            document.getElementById('clearButton').disabled = false;
+        });
+
+       
+        document.getElementById('clearButton').addEventListener('click', function() {
+            document.getElementById('result').textContent = '';
+            document.getElementById('clearButton').disabled = true;
+        });
+    </script>
+</body>
+</html>
